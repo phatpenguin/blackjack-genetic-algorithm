@@ -203,59 +203,25 @@
  *    limitations under the License.
  */
 
-var util = require('util');
-var _ = require('lodash');
+var app = require('../../app');
 
-function _getObjectString(obj){
-    return util.inspect(obj, false, null);
-}
+exports.newplayer = function (test) {
+    test.notEqual(new app.Player(), new app.Player()); //is not the same object
+    test.deepEqual(new app.Player(), new app.Player()); //elements are the same when no parameters are passed
 
-function _log(msg) {
-    console.log(_getObjectString(msg));
-}
+    test.equal(new app.Player().length, 2); //is a tuple
+    test.deepEqual(new app.Player(), [[], undefined]); //player with no parameters has empty hand and no algorithm
 
-function _logError(err){
-    console.error(err);
-}
+    test.notDeepEqual(new app.Player(function (x) {
+        return x;
+    })[1], new app.Player(function (x) {
+        return x;
+    })[1]); //anonymous algorithm functions are similar, not equal
+    test.equal(new app.Player(function (x) {
+        return x;
+    })[1](2), new app.Player(function (x) {
+        return x;
+    })[1](2)); //anonymous algorithm functions return same values when similar
 
-function _stringifyAllTheThings(obj){
-    var stringedObj = (Object.prototype.toString.call(obj) === '[object Array]') ? [] : {};
-    if(typeof obj === 'object'){
-        _.forOwn(obj,
-            function(value, key) {
-                _log('***STRING_THINGS*** key: ' + key + ' value: ' + value);
-                if(typeof value === 'undefined' || value == null) {
-                    stringedObj[key] = null;
-                } else if(typeof value === 'object'){
-                    stringedObj[key] = _stringifyAllTheThings(value);
-                } else {
-                    stringedObj[key] = _convertDateTimeToDate(value.toString());
-                }
-            }
-        );
-
-        return stringedObj;
-    } else {
-        _logError('***STRING_THINGS*** parameter must be an object: ' + obj);
-    }
-}
-
-function _convertDateTimeToDate(string) {
-    // We currently only support Dates NOT DateTimes.  Treat DateTimes like Dates.
-    var isDateTimeRegex = /(^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$)/;
-    var removeTimeRegex = /(T\d\d:\d\d:\d\dZ)/ig;
-
-    if (isDateTimeRegex.test(string)) {
-        return string.replace(removeTimeRegex, '');
-    } else {
-        return string;
-    }
-}
-
-module.exports = {
-    logError: _logError,
-    log: _log,
-    toString: _getObjectString,
-    stringifyAllTheThings: _stringifyAllTheThings,
-    _: _
+    test.done();
 };
