@@ -203,20 +203,62 @@
  *    limitations under the License.
  */
 
-//immutable integration tests
+var config = require('../../test-config');
+var card = require('../../lib/card');
+
 var utils = require('../../utils/csutil');
 var _ = utils._;
 
-var config = require('../../test-config');
-var app = require('../../app');
+exports.newcard = function (test) {
+    test.expect(8);
 
-exports.newplayer_ = function (test) {
-    test.expect(3);
+    test.equal(card.getNewCard(), undefined);
+    test.equal(card.getNewCard('', config.testSuit), undefined);
+    test.equal(card.getNewCard(config.testRank, ''), undefined);
+    test.equal(card.getNewCard('', ''), undefined);
 
-    test.deepEqual(app.getNewPlayer(config.testFunction), _.i.Map([['hand', _.i.OrderedMap()], ['strategy', config.testFunction]])); //player with no parameters has empty hand and no strategy
+    test.notEqual(card.getNewCard(config.testRank, config.testSuit), card.getNewCard(config.testRank, config.testSuit));
+    test.deepEqual(card.getNewCard(config.testRank, config.testSuit), card.getNewCard(config.testRank, config.testSuit));
 
-    test.deepEqual(app.getNewPlayer(config.testFunction).get('hand'), _.i.OrderedMap());
-    test.strictEqual(app.getNewPlayer(config.testFunction).get('strategy'), config.testFunction);
+    test.ok(card.getNewCard(config.testRank, config.testSuit).has('suit'));
+    test.ok(card.getNewCard(config.testRank, config.testSuit).has('rank'));
+
+    test.done();
+};
+
+exports.suits = function (test) {
+    test.expect(6);
+
+    test.ok(_.i.List.isList(card.getSuits()));
+    test.equal(card.getSuits().size, 4);
+
+    test.ok(card.getSuits().contains('hearts'));
+    test.ok(card.getSuits().contains('clubs'));
+    test.ok(card.getSuits().contains('spades'));
+    test.ok(card.getSuits().contains('diamonds'));
+
+    test.done();
+};
+
+exports.ranks = function(test) {
+    test.expect(15);
+
+    test.ok(_.i.List.isList(card.getRanks()));
+    test.equal(card.getRanks().size, 13);
+
+    test.ok(card.getRanks().contains('a'));
+    test.ok(card.getRanks().contains('2'));
+    test.ok(card.getRanks().contains('3'));
+    test.ok(card.getRanks().contains('4'));
+    test.ok(card.getRanks().contains('5'));
+    test.ok(card.getRanks().contains('6'));
+    test.ok(card.getRanks().contains('7'));
+    test.ok(card.getRanks().contains('8'));
+    test.ok(card.getRanks().contains('9'));
+    test.ok(card.getRanks().contains('10'));
+    test.ok(card.getRanks().contains('j'));
+    test.ok(card.getRanks().contains('q'));
+    test.ok(card.getRanks().contains('k'));
 
     test.done();
 };

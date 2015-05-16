@@ -203,25 +203,24 @@
  *    limitations under the License.
  */
 
+var config = require('../../test-config');
 var app = require('../../app');
 
+function testFunction() { }
+
 exports.newplayer = function (test) {
-    test.notEqual(new app.Player(), new app.Player()); //is not the same object
-    test.deepEqual(new app.Player(), new app.Player()); //elements are the same when no parameters are passed
+    test.expect(7);
 
-    test.equal(new app.Player().length, 2); //is a tuple
-    test.deepEqual(new app.Player(), [[], undefined]); //player with no parameters has empty hand and no algorithm
+    test.equal(app.getNewPlayer(), undefined);
 
-    test.notDeepEqual(new app.Player(function (x) {
-        return x;
-    })[1], new app.Player(function (x) {
-        return x;
-    })[1]); //anonymous algorithm functions are similar, not equal
-    test.equal(new app.Player(function (x) {
-        return x;
-    })[1](2), new app.Player(function (x) {
-        return x;
-    })[1](2)); //anonymous algorithm functions return same values when similar
+    test.notEqual(app.getNewPlayer(config.testFunction), app.getNewPlayer(config.testFunction)); //is not the same object
+    test.deepEqual(app.getNewPlayer(config.testFunction), app.getNewPlayer(config.testFunction)); //elements are the same when no parameters are passed
+
+    test.ok(app.getNewPlayer(testFunction).has('hand'));
+    test.ok(app.getNewPlayer(testFunction).has('strategy'));
+
+    test.notDeepEqual(app.getNewPlayer(function (x) { return x; }).get('strategy'), app.getNewPlayer(function (x) { return x; }).get('strategy')); //anonymous strategy functions are similar, not equal
+    test.equal(app.getNewPlayer(function (x) { return x; }).get('strategy')(2), app.getNewPlayer(function (x) { return x; }).get('strategy')(2)); //anonymous strategy functions return same values when similar
 
     test.done();
 };

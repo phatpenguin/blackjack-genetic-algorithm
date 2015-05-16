@@ -203,37 +203,28 @@
  *    limitations under the License.
  */
 
-var _ = require('lodash');
 var utils = require('./utils/csutil');
+var _ = utils._;
 
-function Player(algorithm) {  //tuple - first = hand (list of cards), rest = algorithm
-    return [
-        [],
-        algorithm //a function that determines when to hit, stand, etc
-    ];
+function _getNewPlayer(strategy) {
+    //parameter: strategy - a function that determines when to hit, stand, etc
+    //returns a tuple - first = hand (list of cards), rest = strategy
+    return (_.isUndefined(strategy) || !_.isFunction(strategy))
+        ? undefined
+        : _.i.Map([['hand', _.i.OrderedMap()], ['strategy', strategy]]);
 }
 
-function Card(rank, suit) {
-    return {
-        rank: rank,
-        suit: suit,
-        values: _getRankValues(rank),
-        visible: false
-    }
-}
 
-function _getSuits(){
-    return ['hearts', 'clubs', 'spades', 'diamonds'];
-}
 
-function _getRanks(){
-    return ['a', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'j', 'q', 'k'];
+//takes an array of card tuples [[rank, suit], [rank, suit]]
+function _isValidDeck(deck) {
+    return (deck.length === 52 && _.all(deck, _isValidCard));
 }
 
 function _getAllOfSuit(suit){
     return _.map(_getRanks(),
         function(rank) {
-            return new Card(rank, suit);
+            return _getNewCard(rank, suit);
         }
     )
 }
@@ -245,25 +236,14 @@ function _shuffleDeck(deck, times) {
 }
 
 function _getNewDeck(){
-    return _.flatten(_.map(_getSuits(), _getAllOfSuit));
+    return _.flatten(_.map(_suits(), _getAllOfSuit));
 }
 
 function _validRank(rank){
     return _.includes(_getRanks(), rank);
 }
 
-function _getRankValues(rank) {
-    switch(rank) {
-        case 'a':
-            return [1, 11];
-        case 'j':
-        case 'q':
-        case 'k':
-            return [10];
-        default:
-            return [parseInt(rank)];
-    }
-}
+
 
 function _getHandValues(hand) {
 
@@ -304,5 +284,5 @@ function _dealStartingHand(deck, players){
 //utils.log(_dealStartingHand(_shuffleDeck(_getNewDeck()), [new Player(), new Player(), new Player()]));
 
 module.exports = {
-    Player: Player
+    getNewPlayer: _getNewPlayer
 };

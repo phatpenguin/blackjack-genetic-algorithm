@@ -203,20 +203,13 @@
  *    limitations under the License.
  */
 
-//immutable integration tests
-var utils = require('../../utils/csutil');
-var _ = utils._;
+function _testFunction() { }
 
-var config = require('../../test-config');
-var app = require('../../app');
+var testSuit = 'spades';
+var testRank = 'a';
 
-exports.newplayer_ = function (test) {
-    test.expect(3);
-
-    test.deepEqual(app.getNewPlayer(config.testFunction), _.i.Map([['hand', _.i.OrderedMap()], ['strategy', config.testFunction]])); //player with no parameters has empty hand and no strategy
-
-    test.deepEqual(app.getNewPlayer(config.testFunction).get('hand'), _.i.OrderedMap());
-    test.strictEqual(app.getNewPlayer(config.testFunction).get('strategy'), config.testFunction);
-
-    test.done();
+module.exports = {
+    testFunction: _testFunction,
+    testSuit: testSuit,
+    testRank: testRank
 };

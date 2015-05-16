@@ -204,6 +204,7 @@
  */
 
 var util = require('util');
+var i = require('immutable');
 var _ = require('lodash');
 
 function _getObjectString(obj){
@@ -251,6 +252,13 @@ function _convertDateTimeToDate(string) {
         return string;
     }
 }
+
+function _isTuple(tuple) {
+    return (_.isArray(tuple) && tuple.length === 2);
+}
+
+_.i = i;
+_.isTuple = _isTuple;
 
 module.exports = {
     logError: _logError,
