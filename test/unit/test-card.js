@@ -282,7 +282,15 @@ exports.isValidRank = function(test) {
 exports.isValidCard = function(test) {
     test.expect(1);
 
-    test.ok(card.getSuits().every(card.isValidRank));
+    test.ok(card.getSuits().map(
+        function(suit) {
+            return card.getRanks().map(
+                function(rank){
+                    return card.getNewCard(rank, suit);
+                }
+            )
+        }
+    ).flatten(true).every(card.isValidCard));
 
     test.done();
 };

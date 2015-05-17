@@ -215,29 +215,13 @@ function _getNewPlayer(strategy) {
 }
 
 
-
-//takes an array of card tuples [[rank, suit], [rank, suit]]
-function _isValidDeck(deck) {
-    return (deck.length === 52 && _.all(deck, _isValidCard));
-}
-
-function _getAllOfSuit(suit){
-    return _.map(_getRanks(),
-        function(rank) {
-            return _getNewCard(rank, suit);
-        }
-    )
-}
-
 function _shuffleDeck(deck, times) {
     return ((typeof times !== 'undefined') && typeof times === 'number' && times === 0)
         ? deck
         : _shuffleDeck(_.shuffle(deck), ((times && typeof times === 'number') ? times : 1) - 1);
 }
 
-function _getNewDeck(){
-    return _.flatten(_.map(_suits(), _getAllOfSuit));
-}
+
 
 
 function _getHandValues(hand) {

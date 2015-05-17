@@ -203,61 +203,20 @@
  *    limitations under the License.
  */
 
-var utils = require('../utils/csutil');
+var config = require('../../test-config');
+var deck = require('../../lib/deck');
+var card = require('../../lib/card');
+
+var utils = require('../../utils/csutil');
 var _ = utils._;
 
-//takes a rank: Map<string, List<number, numer>> and a suit: string and returns a card: Map<string,
-function _getNewCard(rank, suit) {
-    return (_isValidRank(rank) && _isValidSuit(suit))
-        ? _.i.Map([['rank', rank], ['suit', suit], ['value', _getRankValues(rank)]])
-        : undefined;
-}
+exports.getNewDeck = function (test) {
+    test.expect(3);
 
-//takes a card Map and returns a boolean
-function _isValidCard(card) {
-    return (_.i.Map.isMap(card) && _isValidRank(card.get('rank')) && _isValidSuit(card.get('suit')));
-}
+    test.ok(deck.getNewDeck().size === 52);
 
-//takes a string and returns a boolean
-function _isValidSuit(suit) {
-    return _getSuits().contains(suit);
-}
+    test.ok(card.getSuits().every(function(suit) { return (deck.getNewDeck().filter(function(card) { return (card.get('suit') === suit); }).size === card.getRanks().size) }));
+    test.ok(card.getRanks().every(function(rank) { return (deck.getNewDeck().filter(function(card) { return (card.get('rank') === rank); }).size === card.getSuits().size) }));
 
-function _getSuits(){
-    return _.i.List.of('hearts', 'clubs', 'spades', 'diamonds');
+    test.done();
 }
-
-//takes a string and returns a boolean
-function _isValidRank(rank) {
-    return _getRanks().contains(rank);
-}
-
-function _getRanks() {
-    return _.i.List.of('a','2','3','4','5','6','7','8','9','10','j','q','k');
-}
-
-function _getRankValues(rank){
-    return _.i.Map([['a', _.i.List.of(1, 11)],
-        ['2', _.i.List.of(2, 2)],
-        ['3', _.i.List.of(3, 3)],
-        ['4', _.i.List.of(4, 4)],
-        ['5', _.i.List.of(5, 5)],
-        ['6', _.i.List.of(6, 6)],
-        ['7', _.i.List.of(7, 7)],
-        ['8', _.i.List.of(8, 8)],
-        ['9', _.i.List.of(9, 9)],
-        ['10', _.i.List.of(10, 10)],
-        ['j', _.i.List.of(10, 10)],
-        ['q', _.i.List.of(10, 10)],
-        ['k', _.i.List.of(10, 10)]]
-    ).get(rank);
-}
-
-module.exports = {
-    isValidCard: _isValidCard,
-    getNewCard: _getNewCard,
-    getSuits: _getSuits,
-    isValidSuit: _isValidSuit,
-    getRanks: _getRanks,
-    isValidRank: _isValidRank
-};
