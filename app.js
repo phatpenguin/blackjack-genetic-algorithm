@@ -239,11 +239,6 @@ function _getNewDeck(){
     return _.flatten(_.map(_suits(), _getAllOfSuit));
 }
 
-function _validRank(rank){
-    return _.includes(_getRanks(), rank);
-}
-
-
 
 function _getHandValues(hand) {
 

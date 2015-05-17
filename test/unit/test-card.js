@@ -209,7 +209,7 @@ var card = require('../../lib/card');
 var utils = require('../../utils/csutil');
 var _ = utils._;
 
-exports.newcard = function (test) {
+exports.getNewCard = function (test) {
     test.expect(8);
 
     test.equal(card.getNewCard(), undefined);
@@ -226,7 +226,7 @@ exports.newcard = function (test) {
     test.done();
 };
 
-exports.suits = function (test) {
+exports.getSuits = function (test) {
     test.expect(6);
 
     test.ok(_.i.List.isList(card.getSuits()));
@@ -240,7 +240,15 @@ exports.suits = function (test) {
     test.done();
 };
 
-exports.ranks = function(test) {
+exports.isValidSuit = function(test) {
+    test.expect(1);
+
+    test.ok(card.getSuits().every(card.isValidSuit));
+
+    test.done();
+};
+
+exports.getRanks = function(test) {
     test.expect(15);
 
     test.ok(_.i.List.isList(card.getRanks()));
@@ -259,6 +267,22 @@ exports.ranks = function(test) {
     test.ok(card.getRanks().contains('j'));
     test.ok(card.getRanks().contains('q'));
     test.ok(card.getRanks().contains('k'));
+
+    test.done();
+};
+
+exports.isValidRank = function(test) {
+    test.expect(1);
+
+    test.ok(card.getRanks().every(card.isValidRank));
+
+    test.done();
+};
+
+exports.isValidCard = function(test) {
+    test.expect(1);
+
+    test.ok(card.getSuits().every(card.isValidRank));
 
     test.done();
 };
