@@ -206,13 +206,7 @@
 var utils = require('./utils/csutil');
 var _ = utils._;
 
-function _getNewPlayer(strategy) {
-    //parameter: strategy - a function that determines when to hit, stand, etc
-    //returns a tuple - first = hand (list of cards), rest = strategy
-    return (_.isUndefined(strategy) || !_.isFunction(strategy))
-        ? undefined
-        : _.i.Map([['hand', _.i.OrderedMap()], ['strategy', strategy]]);
-}
+
 
 
 function _shuffleDeck(deck, times) {
@@ -261,7 +255,3 @@ function _dealStartingHand(deck, players){
 }
 
 //utils.log(_dealStartingHand(_shuffleDeck(_getNewDeck()), [new Player(), new Player(), new Player()]));
-
-module.exports = {
-    getNewPlayer: _getNewPlayer
-};
