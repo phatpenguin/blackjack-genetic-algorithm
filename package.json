@@ -6,7 +6,8 @@
     "start": "node ./app.js"
   },
   "dependencies": {
-    "immutable": "^3.7.2",
-    "lodash": "^3.8.0"
+    "babel": "^5.8.21",
+    "chance": "^0.7.6",
+    "ramda": "^0.17.1"
   }
 }
